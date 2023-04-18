@@ -5,7 +5,6 @@ import uvicorn
 from fastapi import BackgroundTasks
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse, FileResponse
-from pydantic import BaseModel
 
 from report import generate_report, report_id_valid, fetch_report
 
@@ -13,17 +12,13 @@ if __name__ == '__main__':
 
     app = FastAPI()
 
-    # Data model for response payloads
-    class TriggerReportResponse(BaseModel):
-        report_id: str
-
 
     # Semaphore to limit the number of concurrent report generations
     MAX_CONCURRENT_REPORTS = 2
     report_generation_semaphore = Semaphore(MAX_CONCURRENT_REPORTS)
 
 
-    @app.post("/trigger_report", response_model=TriggerReportResponse)
+    @app.post("/trigger_report")
     async def trigger_report(background_tasks: BackgroundTasks):
         # Generate a random report_id
         report_id = str(uuid.uuid4())
