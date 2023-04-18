@@ -12,7 +12,6 @@ if __name__ == '__main__':
 
     app = FastAPI()
 
-
     # Semaphore to limit the number of concurrent report generations
     MAX_CONCURRENT_REPORTS = 2
     report_generation_semaphore = Semaphore(MAX_CONCURRENT_REPORTS)
@@ -48,5 +47,6 @@ if __name__ == '__main__':
                 return FileResponse(report, filename=f"report.csv", media_type="text/csv")
         else:
             return JSONResponse(content={"error": "Invalid report id"}, status_code=400)
+
 
     uvicorn.run(app, host="0.0.0.0")
