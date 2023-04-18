@@ -3,7 +3,8 @@ import os
 import time
 
 from db import get_store_poll_data, get_all_store_ids, get_store_business_hours, report_id_exists, store_report_id
-from report_helpers import calculate_uptime_downtime
+from report_helpers import calculate_uptime_downtime_last_week, \
+    calculate_uptime_downtime_last_day, calculate_uptime_downtime_last_hour
 
 
 def generate_report(report_id: str, report_generation_semaphore):
@@ -29,8 +30,9 @@ def generate_report(report_id: str, report_generation_semaphore):
             poll_data = get_store_poll_data(store_id)
 
             # Calculate uptime and downtime for the store
-            uptime_last_week, downtime_last_week, uptime_last_day, downtime_last_day, uptime_last_hour, \
-                downtime_last_hour = calculate_uptime_downtime(business_hours, poll_data)
+            uptime_last_week, downtime_last_week = calculate_uptime_downtime_last_week(business_hours, poll_data)
+            uptime_last_day, downtime_last_day = calculate_uptime_downtime_last_day(business_hours, poll_data)
+            uptime_last_hour, downtime_last_hour = calculate_uptime_downtime_last_hour(business_hours, poll_data)
 
             # Add the report data to the list
             report_data.append({
